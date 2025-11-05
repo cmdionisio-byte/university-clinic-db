@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultations Management</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      color: #800000;
+    }
+
+    .div-table {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: white;
+      margin-bottom: 30px;
+    }
+
+    .row.header {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 2fr 2fr 2fr 1fr;
+      background: #800000;
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 16px;
+      align-items: center;
+    }
+
+    .body .row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 2fr 2fr 2fr 1fr;
+      padding: 10px 16px;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .body .row:nth-child(even) {
+      background: #f6f8fa;
+    }
+
+    .body .row.crossed {
+      text-decoration: line-through;
+      opacity: 0.6;
+      background: #e3e3e3;
+    }
+
+    .cell {
+      padding: 4px 8px;
+      word-break: break-word;
+    }
+
+    button {
+      padding: 5px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #0078d4;
+      color: white;
+    }
+
+    button:hover {
+      background: #005ea1;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Pending Consultations</h2>
+  <div class="div-table" id="pendingTable">
+    <div class="row header">
+      <div class="cell">Patient</div>
+      <div class="cell">Date & Time</div>
+      <div class="cell">Diagnosis</div>
+      <div class="cell">Prescription</div>
+      <div class="cell">Doctor</div>
+      <div class="cell">Action</div>
+    </div>
+    <div class="body" id="pendingBody">
+      <!-- Rows added by JS -->
+    </div>
+  </div>
+
+  <h2>Consultation History</h2>
+  <div class="div-table" id="historyTable">
+    <div class="row header">
+      <div class="cell">Patient</div>
+      <div class="cell">Date & Time</div>
+      <div class="cell">Diagnosis</div>
+      <div class="cell">Prescription</div>
+      <div class="cell">Doctor</div>
+    </div>
+    <div class="body" id="historyBody">
+      <!-- Moved completed rows -->
+    </div>
+  </div>
+
+  <script>
+    const pendingConsultations = [
+      {
+        patient: "Juan Dela Cruz",
+        datetime: "2025-11-05 10:00 AM",
+        diagnosis: "Flu and fever",
+        prescription: "Paracetamol 500mg, 3x daily",
+        doctor: "Dr. Maria Santos"
+      },
+      {
+        patient: "Aurelia Reyes",
+        datetime: "2025-11-05 01:30 PM",
+        diagnosis: "Mild asthma",
+        prescription: "Ventolin inhaler as needed",
+        doctor: "Dr. Carlos Dela Torre"
+      },
+      {
+        patient: "Mark Dela Cruz",
+        datetime: "2025-11-06 09:00 AM",
+        diagnosis: "Migraine",
+        prescription: "Ibuprofen 400mg when needed",
+        doctor: "Dr. Liza Ramos"
+      }
+    ];
+
+    function renderPending() {
+      const pendingBody = document.getElementById("pendingBody");
+      pendingBody.innerHTML = "";
+      pendingConsultations.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <div class="cell">${item.patient}</div>
+          <div class="cell">${item.datetime}</div>
+          <div class="cell">${item.diagnosis}</div>
+          <div class="cell">${item.prescription}</div>
+          <div class="cell">${item.doctor}</div>
+          <div class="cell"><button onclick="completeConsultation(${index})">✓ Done</button></div>
+        `;
+        pendingBody.appendChild(row);
+      });
+    }
+
+    function completeConsultation(index) {
+      const completed = pendingConsultations.splice(index, 1)[0];
+      addToHistory(completed);
+      renderPending();
+    }
+
+    function addToHistory(consult) {
+      const historyBody = document.getElementById("historyBody");
+      const row = document.createElement("div");
+      row.className = "row crossed";
+      row.innerHTML = `
+        <div class="cell">${consult.patient}</div>
+        <div class="cell">${consult.datetime}</div>
+        <div class="cell">${consult.diagnosis}</div>
+        <div class="cell">${consult.prescription}</div>
+        <div class="cell">${consult.doctor}</div>
+      `;
+      historyBody.appendChild(row);
+    }
+
+    // Initial render
+    renderPending();
+  </script>
+
+</body>
+</html>
