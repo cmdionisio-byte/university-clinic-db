@@ -387,6 +387,7 @@ if (!isCurrentDateTimeCheckbox.checked) {
     } else {
         alert("Error: " + text);
     }
+    loadTable();
 })
 
 addConsultationForm.addEventListener('input', (() => {
