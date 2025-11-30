@@ -938,6 +938,11 @@ legend {
     color: #777;
 }
 
+.view-data {
+    max-width: 300px;
+    overflow: auto;
+}
+
 .p-name-fieldset {
     display: flex;
     flex-direction: column;
