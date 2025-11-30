@@ -14,6 +14,88 @@
 
 <?php include('header.php') ?>
 
+<div id="add-consultation-modal" class="modal">
+    <div class="modal-content">
+        <div class="close-btn-div">
+            <div>Add new consultation</div>
+            <button class="close-btn"><img class='btn-img' src="./img/close.svg"></button>
+        </div>
+
+        <div class="modal-message">
+            <form id='add-consultation-form' action='./add_consultation.php' method='POST' autocomplete="off">
+
+                <fieldset class='date-time-fieldset'>
+                    <legend>Date and Time</legend>
+
+                    <div id='is-current-date-time-container'>
+                        <input type='checkbox' id="is-current-date-time" checked>
+                        <label for="is-current-date-time">Current time and date</label>
+                    </div>
+
+                    <div id='set-date-time-container'>
+                        <label>Date</label>
+                        <input type="date" name="ConsultationDate" id="set-consultation-date" min='2024-01-01' disabled>
+
+                        <label>Time</label>
+                        <input type="time" name="ConsultationTime" id="set-consultation-time" disabled> 
+                    </div>
+                    <span class='error-message' id='add-datetime-error-message'>Yipeee</span>  
+                </fieldset>
+
+                <fieldset class='patient-fieldset'>
+                    <legend>Patient</legend>
+                    <div class="forms-input">
+                        <label for="patient-name">Patient Name *</label>
+                        <input type="text" name="PatientName" id="add-patient-name" pattern="^[A-Za-z.]+([ .][A-Za-z.]+)*$" maxlength="64">
+                        <span class='error-message' id='add-patient-error-message'>Yipeee</span>
+                        <div id="add-patient-autosuggest" class="autosuggest-box"></div>
+                    </div>
+                </fieldset>
+
+                <fieldset class='consultation-fieldset'>
+                    <legend>Consultation</legend>
+
+                    <div class="forms-input">
+                        <label for="add-diagnosis">Diagnosis *</label>
+                        <input type="text" name="Diagnosis" id="add-diagnosis" maxlength="64">
+                        <span class='error-message' id='add-diagnosis-error-message'>Yipeee</span>
+                        <div id="add-diagnosis-autosuggest" class="autosuggest-box"></div>
+                    </div>
+
+                    <div class="forms-input">
+                        <label for="add-prescription">Prescription *</label>
+                        <input type="text" name="Prescription" id="add-prescription" maxlength="64">
+                        <span class='error-message' id='add-prescription-error-message'>Yipeee</span>
+                        <div id="add-prescription-autosuggest" class="autosuggest-box"></div>
+                    </div>
+
+                    <div class="forms-input">
+                        <label for="add-remarks">Remarks</label>
+                        <input type='text' name='Remarks' id='add-remarks' maxlength='256'>
+                    </div>
+                </fieldset>
+            
+                <fieldset class='doctor-fieldset'>
+                    <legend>Doctor</legend>
+                    <div class="forms-input">
+                        <label for="add-doctor-name">Doctor Name *</label>
+                        <input type="text" name="DoctorName" id="add-doctor-name" pattern="^[A-Za-z.]+([ .][A-Za-z.]+)*$" maxlength="64">
+                        <span class='error-message' id='add-doctor-error-message'>Yipeee</span>
+                        <div id="add-doctor-autosuggest" class="autosuggest-box"></div>
+                    </div>     
+                </fieldset>
+
+            </form>
+        </div>
+
+        <div class='consultation-modal-actions'>
+            <button class='action add' type='submit' form='add-consultation-form'>Add</button>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="about-container">
     <div class="section-title">About the Clinic</div>
     <div class="description">
@@ -37,7 +119,7 @@
     <div class="actions">
         <div class="section-title">Quick Actions</div>
         <div class="action-buttons">
-            <button class="action-btn"><i class="fa-solid fa-book-medical"></i> Add Consultation</button>
+            <button class="action-btn" id='add-consultation-btn'><i class="fa-solid fa-book-medical"></i> Add Consultation</button>
             <button class="action-btn"><i class="fa-solid fa-user-doctor"></i> Add Doctor</button>
             <button class="action-btn"><i class="fa-solid fa-user"></i> Add Patient</button>
         </div>

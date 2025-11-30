@@ -1,15 +1,301 @@
-function animateValue(obj, start, end, duration) {
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    obj.innerHTML = Math.floor(progress * (end - start) + start);
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
+const addConsultationButton = document.querySelector('#add-consultation-btn');
+const addConsultationForm = document.querySelector("#add-consultation-form");
+const addConsultationModal = document.querySelector('#add-consultation-modal');
+const addPatientInput = document.querySelector('#add-patient-name');
+const addDoctorInput = document.querySelector('#add-doctor-name');
+const addDiagnosisInput = document.querySelector('#add-diagnosis');
+const addPrescriptionInput = document.querySelector('#add-prescription');
+const modalCloseButton = document.querySelectorAll('.close-btn');
+const isCurrentDateTimeCheckbox = document.querySelector('#is-current-date-time');
+
+
+addConsultationButton.addEventListener("click", () => {
+    openModal(addConsultationModal);
+})
+
+isCurrentDateTimeCheckbox.addEventListener("change", ()=> {
+    const isChecked = isCurrentDateTimeCheckbox.checked;
+    if (isChecked) {
+        document.querySelector('#set-consultation-date').setAttribute('disabled', 0);
+        document.querySelector('#set-consultation-time').setAttribute('disabled', 0);
     }
-  };
-  window.requestAnimationFrame(step);
+    else {
+        document.querySelector('#set-consultation-date').removeAttribute('disabled');
+        document.querySelector('#set-consultation-time').removeAttribute('disabled');
+    }
+})
+
+addConsultationForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+if (!isCurrentDateTimeCheckbox.checked) {
+    const dateValue = document.querySelector('#set-consultation-date').value;
+    const timeValue = document.querySelector('#set-consultation-time').value;
+
+    if (!dateValue || !timeValue) {
+        document.querySelector('#add-datetime-error-message').textContent = 'Please input your desired date and time.';
+        document.querySelector('#add-datetime-error-message').style.display = 'block';
+        return; 
+    }
 }
+    if (!document.querySelector('#add-patient-name').value.trim()) {
+        document.querySelector('#add-patient-error-message').textContent = 'Required.';
+        document.querySelector('#add-patient-error-message').style.display = 'block';
+        document.querySelector('#add-patient-name').focus();
+        return;
+    }
+
+    const diagnosis = document.querySelector('#add-diagnosis').value.trim();
+    if (!diagnosis) {
+        document.querySelector('#add-diagnosis-error-message').textContent = 'Required.';
+        document.querySelector('#add-diagnosis-error-message').style.display = 'block';
+        document.querySelector('#add-diagnosis').focus();
+        return;
+    }
+
+    const prescription = document.querySelector('#add-prescription').value.trim();
+    if (!prescription) {
+        document.querySelector('#add-prescription-error-message').textContent = 'Required.';
+        document.querySelector('#add-prescription-error-message').style.display = 'block';
+        document.querySelector('#add-prescription').focus();
+        return;
+    }
+    const doctorName = document.querySelector('#add-doctor-name').value.trim();
+    if (!doctorName) {
+        document.querySelector('#add-doctor-error-message').textContent = 'Required.';
+        document.querySelector('#add-doctor-name').focus();
+        document.querySelector('#add-doctor-error-message').style.display = 'block';
+        return;
+    }
+
+
+    const formData = new FormData(addConsultationForm);
+
+    const response = await fetch('./add_consultation.php', {
+        method: 'POST',
+        body: formData
+    });
+    const text = (await response.text()).trim();
+    console.log('PHP response:', text);
+
+    if (text === "New record created successfully") {
+        addConsultationModal.style.display = 'none';
+    } else {
+        alert("Error: " + text);
+    }
+})
+
+addConsultationForm.addEventListener('input', (() => {
+    const addButton = document.querySelector('.action.add');
+    let timeoutId;
+    let hasPatientInputError = false;
+    let hasDoctorInputError = false;
+    return (e) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(async () => {
+            const field = e.target;
+            if (field.name == "ConsultationDate" || field.name == "ConsultationTime") {
+                document.querySelector('#add-datetime-error-message').style.display = 'none';
+            }
+            if (field.name === 'PatientName') {
+                let autosuggestions = [];
+                try {
+                    const response = await fetch(`./autosuggestions/autosuggest-patients.php?name=${encodeURIComponent(field.value)}`);
+                    autosuggestions = await response.json();
+                } catch (err) {
+                    console.error('Autosuggest fetch failed', err);
+                }
+
+                if (!field.checkValidity()) {
+                    document.querySelector('#add-patient-error-message').textContent = 'Please enter a valid name.';
+                    document.querySelector('#add-patient-error-message').style.display = 'block';
+                    hasPatientInputError = true;
+                } 
+                else if (autosuggestions.length === 0) {
+                    document.querySelector('#add-patient-error-message').textContent = 'Patient not found in database.';
+                    document.querySelector('#add-patient-error-message').style.display = 'block';
+                    hasPatientInputError = true;            
+                } else {
+                    document.querySelector('#add-patient-error-message').style.display = 'none';
+                    hasPatientInputError = false;
+
+                }
+            }
+            if (field.name === 'DoctorName') {
+                let autosuggestions = [];
+
+                try {
+                    const response = await fetch(`./autosuggestions/autosuggest-doctors.php?name=${encodeURIComponent(field.value)}`);
+                    autosuggestions = await response.json();
+                } catch (err) {
+                    console.error('Autosuggest fetch failed', err);
+                }
+                if (!field.checkValidity()) {
+                    document.querySelector('#add-doctor-error-message').textContent = 'Please enter a valid name.';
+                    document.querySelector('#add-doctor-error-message').style.display = 'block';
+                    hasDoctorInputError = true;
+                } else if (autosuggestions.length === 0) {
+                    document.querySelector('#add-doctor-error-message').textContent = 'Doctor not found in database.';
+                    document.querySelector('#add-doctor-error-message').style.display = 'block';
+                    hasDoctorInputError = true;                   
+                }
+                else {
+                    document.querySelector('#add-doctor-error-message').style.display = 'none';
+                    hasDoctorInputError = false;
+                }
+            }
+            if (hasDoctorInputError || hasPatientInputError) {
+                disableButton(addButton);
+            }
+            else {
+                disableButton(addButton,false);
+            }
+        }, 500); // 500ms debounce delay
+    };
+})());
+
+addPatientInput.addEventListener('input', async (e) => {
+    const query = addPatientInput.value.trim();
+    const response = await fetch(`./autosuggestions/autosuggest-patients.php?name=${encodeURIComponent(query)}`);
+    const autosuggestions = await response.json();
+    const container = document.querySelector('#add-patient-autosuggest');
+
+    container.innerHTML = '';
+    if (Object.keys(autosuggestions).length == 0 || query == '') {
+        container.style.display = 'none';
+    }
+    else {
+        autosuggestions.forEach(name => {
+        const item = document.createElement('div');
+        item.classList.add('suggestion-item');
+        item.textContent = name;
+        item.addEventListener('click', () => {
+            addPatientInput.value = name;
+            container.style.display = 'none';
+        });
+        container.appendChild(item);
+    });
+
+    container.style.display = 'block';
+    }
+    
+});
+
+addDiagnosisInput.addEventListener('input', async (e) => {
+    const query = addDiagnosisInput.value.trim();
+    const response = await fetch(`./autosuggestions/autosuggest-diagnosis.php?diagnosis=${encodeURIComponent(query)}`);
+    const autosuggestions = await response.json();
+    const container = document.querySelector('#add-diagnosis-autosuggest');
+
+    container.innerHTML = '';
+    if (Object.keys(autosuggestions).length == 0 || query == '') {
+        container.style.display = 'none';
+    }
+    else {
+        autosuggestions.forEach(name => {
+        const item = document.createElement('div');
+        item.classList.add('suggestion-item');
+        item.textContent = name;
+        item.addEventListener('click', () => {
+            addDiagnosisInput.value = name;
+            container.style.display = 'none';
+        });
+        container.appendChild(item);
+    });
+
+    container.style.display = 'block';
+    }
+    
+});
+
+addPrescriptionInput.addEventListener('input', async (e) => {
+    const query = addPrescriptionInput.value.trim();
+    const response = await fetch(`./autosuggestions/autosuggest-prescription.php?prescription=${encodeURIComponent(query)}`);
+    const autosuggestions = await response.json();
+    const container = document.querySelector('#add-prescription-autosuggest');
+
+    container.innerHTML = '';
+    if (Object.keys(autosuggestions).length == 0 || query == '') {
+        container.style.display = 'none';
+    }
+    else {
+        autosuggestions.forEach(name => {
+        const item = document.createElement('div');
+        item.classList.add('suggestion-item');
+        item.textContent = name;
+        item.addEventListener('click', () => {
+            addPrescriptionInput.value = name;
+            container.style.display = 'none';
+        });
+        container.appendChild(item);
+    });
+
+    container.style.display = 'block';
+    }
+    
+});
+
+addDoctorInput.addEventListener('input', async (e)=> {
+    const query = addDoctorInput.value.trim();
+    const response = await fetch(`./autosuggestions/autosuggest-doctors.php?name=${encodeURIComponent(query)}`);
+    const autosuggestions = await response.json();
+    const container = document.querySelector('#add-doctor-autosuggest');
+
+    container.innerHTML = '';
+    if (Object.keys(autosuggestions).length == 0 || query == '') {
+        container.style.display = 'none';
+    }
+    else {
+        autosuggestions.forEach(name => {
+        const item = document.createElement('div');
+        item.classList.add('suggestion-item');
+        item.textContent = name;
+        item.addEventListener('click', () => {
+            addDoctorInput.value = name;
+            container.style.display = 'none';
+        });
+        container.appendChild(item);
+    });
+
+    container.style.display = 'block';
+    }
+});
+
+
+
+modalCloseButton.forEach((btn) => {
+    btn.addEventListener("click", ()=> {
+        addConsultationModal.style.display = 'none';
+        document.body.classList.remove("body-no-scroll");
+    })
+});
+
+function disableButton(button, isButtonDisabled=true) {
+    if (isButtonDisabled) {
+        button.setAttribute('disabled', 0);
+    }
+    else {
+        button.removeAttribute('disabled');
+    }
+}
+
+//i just thought this would look cool lmao
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      obj.innerHTML = Math.floor(progress * (end - start) + start);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+    }
+
+function openModal(modal) {
+    modal.style.display = "flex";
+    document.body.classList.add("body-no-scroll");
+}    
 
 async function getDatabaseStatistics() {
     const response = await fetch('homepage_stats.php');

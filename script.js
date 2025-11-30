@@ -331,7 +331,6 @@ function deleteConsultation(id) {
 
 
 addConsultationForm.addEventListener("submit", async (e) => {
-  // Prevent the default form submission (which would reload the page)
     e.preventDefault();
 if (!isCurrentDateTimeCheckbox.checked) {
     const dateValue = document.querySelector('#set-consultation-date').value;
@@ -340,7 +339,7 @@ if (!isCurrentDateTimeCheckbox.checked) {
     if (!dateValue || !timeValue) {
         document.querySelector('#add-datetime-error-message').textContent = 'Please input your desired date and time.';
         document.querySelector('#add-datetime-error-message').style.display = 'block';
-        return; // stop form submission
+        return; 
     }
 }
     if (!document.querySelector('#add-patient-name').value.trim()) {
@@ -390,7 +389,6 @@ if (!isCurrentDateTimeCheckbox.checked) {
     }
 })
 
-// input event listener
 addConsultationForm.addEventListener('input', (() => {
     const addButton = document.querySelector('.action.add');
     let timeoutId;
