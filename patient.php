@@ -80,7 +80,7 @@ include("database.php");
                 <fieldset class='contactno-fieldset'>
                     <div class="forms-input">
                         <label for="add-contact">Contact Number *</label>
-                        <div>
+                        <div style="flex">
                         <input type="text" value="+639" readonly id="contactprefix">
                         <input type="tel" id="partcontact" name="PartContactNo" placeholder="123456789" pattern="[0-9]{9}" maxlength="9" title="Input must contain numbers only." required>
                         </div>
@@ -134,11 +134,19 @@ include("database.php");
                         </select>
                     </div>     
                 </fieldset>
-                <fieldset class='sex-fieldset'>
-                    <div class="forms-input">
-                        <label for="filter-bday">Birthday</label>
-                        <input  name="Birthday" id="filter-bday" type="date" min="1900-01-01" max="<?php echo date("Y-m-d"); ?>">
+                <fieldset>
+                    <legend>Birthday</legend>
+                    <div style='display: flex; gap: 10px;'>
+                        <div class="forms-input">
+                            <label for="filter-start-bday">Start Date</label>
+                            <input type="date" id="filter-start-bday" min="1900-01-01" max="<?php echo date("Y-m-d"); ?>" name="StartDate">
+                        </div>
+                        <div class="forms-input">
+                            <label for="filter-end-bday">End Date</label>
+                            <input type="date" id="filter-end-bday" min="1900-01-01" max="<?php echo date("Y-m-d"); ?>" name="EndDate">
+                        </div>
                     </div>
+                    <span class='error-message' id='filter-bday-error-message'></span>
                 </fieldset>
                 <fieldset class='sex-fieldset'>
                     <div class="forms-input">
