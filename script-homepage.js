@@ -82,6 +82,7 @@ if (!isCurrentDateTimeCheckbox.checked) {
     } else {
         alert("Error: " + text);
     }
+    getDatabaseStatistics();
 })
 
 addConsultationForm.addEventListener('input', (() => {
