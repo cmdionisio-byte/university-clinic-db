@@ -840,4 +840,16 @@ function convertTo24Hour(timeStr) {
     return `${hh}:${mm}`;
 }
 
+const mobileBtn = document.getElementById("mobile-menu-btn");
+const slideMenu = document.getElementById("tba-slide-menu");
+const overlay = document.getElementById("tba-overlay");
 
+mobileBtn.addEventListener("click", () => {
+    slideMenu.classList.add("open");
+    overlay.classList.add("show");
+});
+
+overlay.addEventListener("click", () => {
+    slideMenu.classList.remove("open");
+    overlay.classList.remove("show");
+});

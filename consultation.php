@@ -342,7 +342,7 @@ include("database.php");
     <div class="consultations-actions">
         <div>
             <button class='consultations action' id='filter-consultation-btn'><i class="fa-solid fa-filter"></i> <span>Filter</span></button>
-            <input type="text" id="consultation-searchbox" placeholder="Filter by patient or doctor">
+            <input type="text" id="consultation-searchbox" placeholder="Filter by patient or doctor" maxlength="64">
         </div>
         <button class="consultations action" id='add-consultation-btn'><i class="fa-solid fa-plus"></i> <span>Add new consultation</span></button>
     </div>
