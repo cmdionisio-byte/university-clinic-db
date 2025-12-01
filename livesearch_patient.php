@@ -46,14 +46,17 @@ if (mysqli_num_rows($res) === 0) {
 
 
 while ($row = mysqli_fetch_assoc($res)) {
+    $mi = $row['PatientMiddleInit'];
+    $middle = $mi ? htmlspecialchars($mi) . " " : "";
+    $fullName =
+        htmlspecialchars($row['PatientFirstName']) . " " .
+        $middle .
+        htmlspecialchars($row['PatientLastName']);
+
     echo "
         <div>
             <a href='get_patient.php?id={$row['PatientID']}'>
-                <h4 class='link-to-other'>"
-                    .htmlspecialchars($row['PatientFirstName'])." "
-                    .htmlspecialchars($row['PatientMiddleInit'])." "
-                    .htmlspecialchars($row['PatientLastName']).
-                "</h4>
+                <h4 class='link-to-other'>{$fullName}</h4>
             </a>
             <hr>
         </div>

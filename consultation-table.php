@@ -17,7 +17,7 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
 
 $tableData = '';
-$sql = "SELECT CONSULTATION.ConsultationID, CONSULTATION.ConsultDateTime,
+$sql = "SELECT CONSULTATION.ConsultationID, CONSULTATION.ConsultDateTime, PATIENT.PatientID,
     CONCAT(
         PATIENT.PatientFirstName, ' ',
         IFNULL(CONCAT(PATIENT.PatientMiddleInit, '. '), ''),
@@ -81,7 +81,7 @@ while ($row = $result->fetch_assoc()) {
     $tableData .= "<tr>
                 <td data-label='Date'>" . date("M j, Y", strtotime($row["ConsultDateTime"])) . "</td>
                 <td data-label='Time'>" . date("g:i A", strtotime($row["ConsultDateTime"])) . "</td>
-                <td data-label='Patient'>" . $row["PatientFullName"] . "</td>
+                <td data-label='Patient'> <a class='consultation-table-patients' href='./get_patient.php?id=" . $row["PatientID"] . "'>" . $row["PatientFullName"] . "</a></td>
                 <td data-label='Diagnosis'>" . $row["Diagnosis"] . "</td>
                 <td data-label='Doctor'>" . $row["DoctorFullName"] . "</td>
                 <td style='width:1%; white-space:nowrap;'>

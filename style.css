@@ -216,6 +216,17 @@ body {
     gap: 5px;
 }
 
+.consultation-table-patients {
+    text-decoration: none;
+    color:#333;
+}
+
+.consultation-table-patients:hover {
+    color: var(--color-primary-darker);
+    font-weight: 500;
+}
+
+
 .consultations.action {
     padding: 10px;
     text-decoration: none;
