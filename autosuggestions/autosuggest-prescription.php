@@ -1,7 +1,7 @@
 <?php 
     include('../database.php');
     $query = $_GET['prescription'];
-    $sql = "SELECT Prescription
+    $sql = "SELECT DISTINCT Prescription
 FROM CONSULTATION
 WHERE Prescription LIKE '%$query%'
     	ORDER BY Prescription ASC
