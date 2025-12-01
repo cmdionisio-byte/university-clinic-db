@@ -7,7 +7,7 @@
         PATIENT.PatientLastName
     ) AS PatientFullName
 FROM PATIENT
-WHERE CONCAT(
+WHERE PATIENT.PatientIsActive = 1 AND CONCAT(
         PATIENT.PatientFirstName, ' ',
         IFNULL(CONCAT(PATIENT.PatientMiddleInit, '. '), ''),
         PATIENT.PatientLastName
