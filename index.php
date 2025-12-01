@@ -14,6 +14,78 @@
 
 <?php include('header.php') ?>
 
+<!--ADD PATIENT-->
+<div id="add-patient-modal" class="modal">
+    <div class="modal-content">
+        <div class="close-btn-div">
+            <div>Add new patient</div>
+            <button class="close-btn" id="close-add-modal"><img class='btn-img' src="./img/close.svg"></button>
+        </div>
+        <div class="modal-message">
+            <form id='add-patient-form' method='POST'>
+                <!-- NAME -->
+                <fieldset class='p-name-fieldset'>                   
+                    <div class="forms-input">
+                        <label for="add-p-firstname">First Name *</label>
+                        <input type="text" name="PFirstName" id="add-p-firstname" pattern="^[A-Za-z.]+([ .][A-Za-z.]+)*$" title="Name must contain only letters and periods." maxlength="64" required>
+                        <span class='error-message' id='add-fname-error-message'>Yipeee</span>
+                    </div>     
+                    <div class="forms-input">
+                        <label for="add-p-middleinit">Middle Initial</label>
+                        <input type="text" name="PMiddleInit" id="add-p-middleinit" pattern="^[A-Za-z]+$" maxlength="2" title="Initials must only be letters.">
+                        <span class='error-message' id='add-mname-error-message'>Yipeee</span>
+                    </div> 
+                    <div class="forms-input">
+                        <label for="add-p-lastname">Last Name *</label>
+                        <input type="text" name="PLastName" id="add-p-lastname" pattern="^[A-Za-z.]+([ .][A-Za-z.]+)*$" maxlength="64" title="Name must contain only letters and periods." required>
+                        <span class='error-message' id='add-lname-error-message'>Yipeee</span>
+                    </div> 
+                </fieldset>
+
+                <!-- SEX -->
+                <fieldset class='sex-fieldset'>
+                    <div class="forms-input">
+                        <label for="add-sex">Sex *</label>
+                        <select name="Sex" id="add-sex" required>
+                            <option value="" selected disabled> </option>
+                            <option value="F">Female</option>
+                            <option value="M">Male</option>
+                            <option value="O">Other</option>
+                        </select>
+                    </div>     
+                </fieldset>
+
+                <!-- BIRTHDAY -->
+                <fieldset class='bday-fieldset'>
+                    <div class="forms-input">
+                        <label for="add-bday">Birthday *</label>
+                        <input name="Birthday" id="add-bday" type="date" min="1900-01-01" max="<?php echo date("Y-m-d"); ?>" required>
+                        <span class='error-message' id='add-bdayerror-message'>Yipeee</span>
+                    </div>     
+                </fieldset>
+                
+                <!-- CONTACT -->
+                <fieldset class='contactno-fieldset'>
+                    <div class="forms-input">
+                        <label for="add-contact">Contact Number *</label>
+                        <div style="flex">
+                        <input type="text" value="+639" readonly id="contactprefix">
+                        <input type="tel" id="partcontact" name="PartContactNo" placeholder="123456789" pattern="[0-9]{9}" maxlength="9" title="Input must contain numbers only." required>
+                        </div>
+                        <input type="hidden" name="ContactNo" id="add-contact">
+                        <span class='error-message' id='add-contact-error-message'>Yipeee</span>
+                    </div>     
+                </fieldset>
+            </form>
+        </div>
+
+        <div class='consultation-modal-actions'>
+            <button class='action add' type='submit' form='add-patient-form'>Add</button>
+        </div>
+    </div>
+</div>
+
+<!--ADD CONSULT-->
 <div id="add-consultation-modal" class="modal">
     <div class="modal-content">
         <div class="close-btn-div">
@@ -121,7 +193,7 @@
         <div class="action-buttons">
             <button class="action-btn" id='add-consultation-btn'><i class="fa-solid fa-book-medical"></i> Add Consultation</button>
             <button class="action-btn"><i class="fa-solid fa-user-doctor"></i> Add Doctor</button>
-            <button class="action-btn"><i class="fa-solid fa-user"></i> Add Patient</button>
+            <button class="action-btn" id='add-patient-btn'><i class="fa-solid fa-user"></i> Add Patient</button>
         </div>
     </div>
 </div>
