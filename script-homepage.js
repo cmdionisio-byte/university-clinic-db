@@ -8,6 +8,102 @@ const addPrescriptionInput = document.querySelector('#add-prescription');
 const modalCloseButton = document.querySelectorAll('.close-btn');
 const isCurrentDateTimeCheckbox = document.querySelector('#is-current-date-time');
 
+const addPatientButton = document.querySelector('#add-patient-btn');
+const addPatientModal = document.querySelector('#add-patient-modal');
+const addPatientForm = document.querySelector("#add-patient-form");
+
+document.querySelectorAll('#add-patient-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        addPatientModal.style.display = 'flex';
+    });
+});
+
+document.querySelectorAll('#add-patient-form').forEach(form => {
+    form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const firstname = document.querySelector('#add-p-firstname').value.trim();
+    if (!firstname) {
+        document.querySelector('#add-fname-error-message').textContent = 'Required.';
+        document.querySelector('#add-fname-error-message').style.display = 'block';
+        document.querySelector('#add-p-firstname').focus();
+        return;
+    }
+
+    const middleinit = document.querySelector('#add-p-middleinit').value.trim();
+
+    const lastname= document.querySelector('#add-p-lastname').value.trim();
+    if (!lastname) {
+        document.querySelector('#add-lname-error-message').textContent = 'Required.';
+        document.querySelector('#add-lname-error-message').style.display = 'block';
+        document.querySelector('#add-p-lastname').focus();
+        return;
+    }
+
+    const sex = document.querySelector('#add-sex').value.trim();
+    if (!sex) {
+        document.querySelector('#add-sex-error-message').textContent = 'Please select a sex.';
+        document.querySelector('#add-sex-error-message').style.display = 'block';
+        return;
+    }
+
+    const bday = document.querySelector('#add-bday').value.trim();
+    if (!bday) {
+        document.querySelector('#add-bdayerror-message').textContent = 'Required.';
+        document.querySelector('#add-bdayerror-message').focus();
+        document.querySelector('#add-bday').style.display = 'block';
+        return;
+    }
+
+    const prefix = document.querySelector('#contactprefix').value.trim();
+    const partContact = document.querySelector('#partcontact').value.trim();
+    const fullContactHidden = document.querySelector('#add-contact');
+
+    if (!partContact || partContact.length !== 9 || !/^\d{9}$/.test(partContact)) {
+        document.querySelector('#add-contact-error-message').textContent = 'Contact Number must be the required 9 digits.';
+        document.querySelector('#add-contact-error-message').style.display = 'block';
+        const errorMsgDiv = document.querySelector('#add-contact-error-message');
+        errorMsgDiv.style.display = 'block';
+        
+        partContactInput.focus();
+        return;
+    }
+
+   const fullContact = prefix + partContact;
+
+    if (fullContactHidden) {
+            fullContactHidden.value = fullContact;
+        } else {
+            console.error("Hidden contact field not found!");
+            return; 
+        }
+
+    const formData = new FormData(addPatientForm);
+
+    const response = await fetch('./add_patient.php', {
+        method: 'POST',
+        body: formData
+    });
+
+    const text = (await response.text()).trim();
+    console.log('PHP response:', text);
+
+    if (text === "New record created successfully") {
+        addPatientModal.style.display = 'none';
+    } else {
+        alert("Error: " + text);
+    }
+    
+  const formObject = {};
+  formData.forEach((value, key) => {
+    formObject[key] = value;
+  });
+  console.log("Form Data as Object:", formObject);
+    addPatientModal.style.display = 'none';
+    addPatientConfirmModal.style.display = 'flex';
+    addPatientForm.reset();
+});});
+
 
 addConsultationButton.addEventListener("click", () => {
     openModal(addConsultationModal);
