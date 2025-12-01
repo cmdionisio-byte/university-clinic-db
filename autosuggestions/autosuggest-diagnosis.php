@@ -1,7 +1,7 @@
 <?php 
     include('../database.php');
     $diagnosis = $_GET['diagnosis'];
-    $sql = "SELECT Diagnosis
+    $sql = "SELECT DISTINCT Diagnosis
 FROM CONSULTATION
 WHERE Diagnosis LIKE '%$diagnosis%'
     	ORDER BY Diagnosis ASC
