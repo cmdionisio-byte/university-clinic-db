@@ -17,6 +17,7 @@ const addPatientConfirmModal = document.querySelector('#add-patient-confirm-moda
 const filterPatientModal = document.querySelector('#filter-patient-modal');
 const filterPatientButton = document.querySelector('#filter-patient-btn');
 const filterPatientForm = document.querySelector('#filter-patient-form');
+const confirmFilterButton = document.querySelector('.action.filter-reset')
 
 const modals = document.querySelectorAll('.modal');
 
@@ -41,20 +42,22 @@ searchBoxes.forEach((searchBox, index) => {
         let url = "livesearch_patient.php";
         const queryInput = [];
 
+       const shouldSearch = query.length > 0 || filterInput;
+
         if (query.length > 0) {
             queryInput.push("q=" + encodeURIComponent(query));
             resultsDiv.style.display = 'block'; 
         } else {
-            resultsDiv.style.display = filterInput ? 'block' : 'none';
+            resultsDiv.style.display = 'none';
         }
-        
+
         if (filterInput) {
             queryInput.push(filterInput);
         }
-
+        
         if (queryInput.length === 0) {
             resultsDiv.innerHTML = "";
-            resultsDiv.style.display = 'none';
+            resultsDiv.style.display = 'none'; 
             return;
         }
 
@@ -165,7 +168,7 @@ document.querySelectorAll('#add-patient-form').forEach(form => {
         const errorMsgDiv = document.querySelector('#add-contact-error-message');
         errorMsgDiv.style.display = 'block';
         
-        partContactInput.focus();
+        partContact.focus();
         return;
     }
 
@@ -204,29 +207,45 @@ document.querySelectorAll('#add-patient-form').forEach(form => {
     addPatientForm.reset();
 });});
 
+if(filterPatientButton){
 document.querySelectorAll('#filter-patient-btn').forEach(btn => {
     btn.addEventListener('click', () => {
        filterPatientModal.style.display = 'flex';
     });
 });
+}
 
+if (deletePatientButton) {
+    deletePatientButton.addEventListener("click", () => {
+        if (deletePatientModal) {
+            deletePatientModal.style.display = 'flex';
+        } else {
+            console.error("Delete modal not found.");
+        }
+    });
+} else {
+    console.log("Delete button not found.");
+}
 
-deletePatientButton.addEventListener("click", ()=> {
-    deletePatientModal.style.display = 'flex';
-});
+if (confirmDeletionButton) {
+    confirmDeletionButton.addEventListener("click", async () => {
+        if (!deletePatientButton) {
+             console.error("Cannot confirm deletion: Delete button data-id is missing.");
+             return;
+        }
+        
+        const id = deletePatientButton.dataset.id;
+        const response = await fetch(`delete_patient.php?id=${id}`);
+        const text = await response.text();
+        if (text.includes("success")) {   
+            window.location.href = "patient.php"; 
+        } else {
+            alert("Failed to delete patient.");
+        }
+    });
+}
 
-confirmDeletionButton.addEventListener("click", async ()=> {
-    const id = deletePatientButton.dataset.id;
-    const response = await fetch(`delete_patient.php?id=${id}`);
-    const text = await response.text();
-    if (text.includes("success")) {   
-        window.location.href = "patient.php"; 
-    } else {
-        alert("Failed to delete patient.");
-    }
-});
-
-editPatientButton.addEventListener("click", async () => {
+if (editPatientButton) {editPatientButton.addEventListener("click", async () => {
     editPatientModal.style.display = 'flex';
     const id = editPatientButton.dataset.id; 
 
@@ -258,6 +277,7 @@ editPatientButton.addEventListener("click", async () => {
         console.error(error);
     }
 });
+}
 
 // FOr trimming name inputs sa edit
 const editFirstNameInput = document.querySelector('#edit-p-firstname');
@@ -279,6 +299,7 @@ if (editLastNameInput) {
     });
 }
 
+if(editPatientForm){
 document.querySelectorAll('#edit-patient-form').forEach(form => {
     form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -354,7 +375,9 @@ document.querySelectorAll('#edit-patient-form').forEach(form => {
 
     });
 });
+}
 
+if(filterPatientForm){
 document.querySelector('#filter-patient-form').addEventListener('submit', function(e) {
     e.preventDefault(); 
     closeModals();
@@ -363,7 +386,9 @@ document.querySelector('#filter-patient-form').addEventListener('submit', functi
         currentSearchBox.dispatchEvent(new Event('keyup'));
     }
 });
+}
 
+if(confirmFilterButton){
 document.querySelector('.action.filter-reset').addEventListener('click', function(e) {
     e.preventDefault(); 
     filterPatientForm.reset();
@@ -373,3 +398,4 @@ document.querySelector('.action.filter-reset').addEventListener('click', functio
         currentSearchBox.dispatchEvent(new Event('keyup'));
     }
 });
+}
