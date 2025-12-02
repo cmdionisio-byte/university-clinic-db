@@ -110,7 +110,7 @@ function getFilter() {
     
     return new URLSearchParams(input).toString();
 }
-
+ 
 document.querySelectorAll('.close-btn-patient').forEach(btn => {
     btn.addEventListener('click', closeModals);
 });
@@ -153,7 +153,6 @@ document.querySelectorAll('#add-patient-form').forEach(form => {
     const bday = document.querySelector('#add-bday').value.trim();
     if (!bday) {
         document.querySelector('#add-bdayerror-message').textContent = 'Required.';
-        document.querySelector('#add-bdayerror-message').focus();
         document.querySelector('#add-bday').style.display = 'block';
         return;
     }
@@ -167,7 +166,6 @@ document.querySelectorAll('#add-patient-form').forEach(form => {
         document.querySelector('#add-contact-error-message').style.display = 'block';
         const errorMsgDiv = document.querySelector('#add-contact-error-message');
         errorMsgDiv.style.display = 'block';
-        
         partContact.focus();
         return;
     }
@@ -191,12 +189,30 @@ document.querySelectorAll('#add-patient-form').forEach(form => {
     const text = (await response.text()).trim();
     console.log('PHP response:', text);
 
-    if (text === "New record created successfully") {
-        addPatientModal.style.display = 'none';
-    } else {
-        alert("Error: " + text);
-    }
-    
+    const patientDupe = document.querySelector('#dupe-patient-error-message'); 
+    patientDupe.style.display = 'none'; 
+    patientDupe.textContent = '';
+
+        if (text === "New record created successfully") {
+            addPatientModal.style.display = 'none';
+            addPatientConfirmModal.style.display = 'flex';
+            addPatientForm.reset();
+
+        } else if (text.startsWith("Error:")) {
+            patientDupe.textContent = text.replace("Error:", "").trim();
+            patientDupe.style.display = 'block';
+            addPatientModal.style.display = 'flex';
+            
+            document.querySelector('#add-lname-error-message').style.display = 'none';
+            document.querySelector('#add-sex-error-message').style.display = 'none';
+            document.querySelector('#add-bdayerror-message').style.display = 'none';
+            document.querySelector('#add-contact-error-message').style.display = 'none';
+            
+        } else {
+            // Unknown error
+            alert("An unexpected error occurred: " + text);
+        }
+
   const formObject = {};
   formData.forEach((value, key) => {
     formObject[key] = value;
