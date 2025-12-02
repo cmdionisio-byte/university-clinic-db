@@ -299,7 +299,15 @@ body {
     color: #fff; 
 }
 
+a.consultation-table-patients{
+    text-decoration: none;
+    color:#212529
+}
 
+.inactive-patient{
+    font-style: italic;
+    color:#555;
+}
 
 .pagination {
     display: flex;
