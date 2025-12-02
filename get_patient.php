@@ -90,7 +90,6 @@ error_reporting(E_ALL);
                             <option value="" selected disabled> </option>
                             <option value="F">Female</option>
                             <option value="M">Male</option>
-                            <option value="O">Other</option>
                         </select>
                     </div>     
                 </fieldset>
