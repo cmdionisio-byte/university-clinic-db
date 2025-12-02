@@ -362,6 +362,7 @@ addDoctorInput.addEventListener('input', async (e)=> {
 modalCloseButton.forEach((btn) => {
     btn.addEventListener("click", ()=> {
         addConsultationModal.style.display = 'none';
+        addPatientModal.style.display = 'none';
         document.body.classList.remove("body-no-scroll");
     })
 });
