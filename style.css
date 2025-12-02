@@ -216,17 +216,6 @@ body {
     gap: 5px;
 }
 
-.consultation-table-patients {
-    text-decoration: none;
-    color:#333;
-}
-
-.consultation-table-patients:hover {
-    color: var(--color-primary-darker);
-    font-weight: 500;
-}
-
-
 .consultations.action {
     padding: 10px;
     text-decoration: none;
@@ -358,7 +347,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 #patient-searchbox {
     width: min(800px, 70vw);
@@ -496,13 +486,6 @@ body {
     align-items: center;
 }
 
-.patient-actions {
-    width:50%;
-    gap: 5px;
-    margin: 10px 30px 10px 0px;
-
-}
-
 .ellips-truncate {
     white-space: nowrap;
     overflow: hidden;
@@ -519,10 +502,13 @@ body {
 }
 
 .patient-actions {
-    width: 90%;
+
     display: flex;
+    justify-content:space-between;
     align-items: center;
     gap: 5px;
+    margin: 10px 10px 10px 0px;
+    margin-right: -5px;
 }
 
 .patient.action {
@@ -1058,7 +1044,7 @@ textarea:required:invalid {
 
 /* --- 1. FORCE HIDE MODALS ON LOAD --- */
 #addStaffModal, #viewStaffModal, #editStaffModal {
-    display: none; /* Relies on inline style primarily, but this reinforces it */
+    display: none; 
     position: fixed;
     z-index: 1050;
     left: 0;

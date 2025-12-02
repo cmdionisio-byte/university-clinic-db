@@ -166,12 +166,15 @@ include("database.php");
 <!-- SEARCH BAR AND ACTIONS -->
 <div class="patient-table-container">
     <div><h2 class='consultation-history'>Patient Information</h2></div>
-    <div class="patient-actions">
-        <button type="button" class="patient action" id='add-patient-btn'><i class="fa-solid fa-plus"></i> <span>Add new patient</span></button>
-        <button type="button" class='patient action' id='filter-patient-btn'><i class="fa-solid fa-filter"></i> <span>Filter</span></button>
-    </div>
-    <div class="patient-search">
-        <input type="text" id="patient-searchbox" placeholder="Search patient name...">
+    <div>
+        <div class="patient-actions">
+            
+            <div><button type="button" class="patient action" id='add-patient-btn'><i class="fa-solid fa-plus"></i> <span>Add new patient</span></button></div>
+            <div><button type="button" class='patient action' id='filter-patient-btn'><i class="fa-solid fa-filter"></i> <span>Filter</span></button></div>
+        </div>
+        <div class="patient-search">
+            <input type="text" id="patient-searchbox" placeholder="Search patient name...">
+        </div>
     </div>
 </div>
 
